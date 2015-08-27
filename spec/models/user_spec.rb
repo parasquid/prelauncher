@@ -42,14 +42,15 @@ RSpec.describe User, type: :model do
 
   context 'referrals' do
     describe 'when there is a referral' do
-      let(:this_user) { User.create(email: :test_email) }
+      let(:this_user) { User.create(email: test_email) }
       let(:referral_email) { 'referral@example.com' }
       let(:referral) { this_user.add_referral(email: referral_email) }
       it 'is able to store a referral' do
         expect(referral).to_not be nil
       end
-      pending it 'counts the number of referrals this user has' do
-        expect(this_user.referrals).to eq 1
+      it 'counts the number of referrals this user has' do
+        referral # force-load the lazily-instantiated variable
+        expect(this_user.referrals.count).to eq 1
       end
       it 'correctly tracks the referral and the user that referred it'
     end

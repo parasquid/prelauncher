@@ -34,10 +34,14 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'byebug'
+  gem 'pry'
+  gem 'pry-byebug'
+  gem 'pry-coolline'
+  gem 'pry-state'
   gem 'rspec-rails'
   gem 'guard-rails', require: false
   gem 'guard-rspec', require: false
+  gem 'database_cleaner'
 end
 
 group :development do
