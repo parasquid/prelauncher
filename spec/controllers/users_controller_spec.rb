@@ -20,11 +20,21 @@ RSpec.describe UsersController, type: :controller do
       expect(response).to redirect_to(referrals_path)
     end
 
-    pending context "new user" do
+    context "new user" do
+      before do
+        user = double(User)
+        allow(user).to receive(:save).and_return(true)
+        allow(User).to receive(:new).and_return(user)
+      end
+
       it "creates a new account" do
-        allow_any_instance_of(User).to receive(:save).and_return(true)
         post :create, email: test_email
-        expect(User).to receive(:save)
+        expect(User).to have_received(:new).with(email: test_email)
+      end
+
+      it "saves the account" do
+        post :create, email: test_email
+        expect(assigns(:user)).to have_received(:save)
       end
     end
   end
