@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :already_registered, only: :new
+  before_filter :check_if_already_registered, only: :new
 
   def new
     @user = User.new
@@ -19,10 +19,10 @@ class UsersController < ApplicationController
 
   private
 
-  def already_registered
+  def check_if_already_registered
     if cookies.signed["user_id"]
-      cookied_user = User.where(id: cookies.signed["user_id"]).first
-      if cookied_user
+      already_registered = User.where(id: cookies.signed["user_id"]).first
+      if already_registered
         redirect_to referrals_path
       else
         cookies.delete("user_id")
