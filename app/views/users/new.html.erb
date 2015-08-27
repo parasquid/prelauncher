@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="hero">
+      <p class="large brandon">Harry&#8217;s is live</p>
+      <p class="small brandon">
+        Respecting the Face and Wallet<br>
+        Since Like...Right Now.
+      </p>
+  </div>
+</div>
+
+<div class="container">
+    <%= form_for @user, html: {class: "form-inline"} do |f| %>
+      <%= f.label :email, 'Be the first to know', class: "control-label" %>
+      <br />
+      <div class="form-group">
+        <%= f.text_field :email, placeholder: "Enter Email", class: "form-control" %>
+      </div>
+      <div class="form-group">
+        <%= f.submit "Step Inside", class: "btn btn-default" %>
+      </div>
+    <% end %>
+</div>
