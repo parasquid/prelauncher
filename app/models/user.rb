@@ -8,4 +8,9 @@ class User < ActiveRecord::Base
   def add_referral(email_address)
     referrals.create(email: email_address)
   end
+
+  def generate_referral_code
+    self.referral_code = SecureRandom.hex(5)
+    save
+  end
 end
