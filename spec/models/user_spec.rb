@@ -46,6 +46,7 @@ RSpec.describe User, type: :model do
 
   context 'referrals' do
     let(:this_user) { User.create(email: test_email) }
+    
     describe 'when there is a referral' do
       let(:referral_email) { 'referral@example.com' }
       let(:referral) { this_user.add_referral(email: referral_email) }
@@ -62,6 +63,7 @@ RSpec.describe User, type: :model do
         expect(referral.referrer).to eq this_user
       end
     end
+
     describe 'generating referral codes' do
       it 'is able to create a referral code' do
         this_user.generate_referral_code
