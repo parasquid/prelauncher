@@ -52,7 +52,9 @@ RSpec.describe User, type: :model do
         referral # force-load the lazily-instantiated variable
         expect(this_user.referrals.count).to eq 1
       end
-      it 'correctly tracks the referral and the user that referred it'
+      it 'correctly tracks the referral and the user that referred it' do
+        expect(referral.referrer).to eq this_user
+      end
     end
   end
 end
