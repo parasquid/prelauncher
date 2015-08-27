@@ -1,8 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+  let(:test_email) { 'test@example.com'}
+
   context 'when a guest signs up' do
-    let(:test_email) { 'test@example.com'}
     it 'creates a user account' do
       User.create(email: test_email)
       expect(User.count).to eq 1
@@ -35,6 +36,20 @@ RSpec.describe User, type: :model do
         User.create(email: test_email)
         User.create(email: test_email)
         expect(User.count).to eq 1
+      end
+    end
+  end
+
+  context 'referrals' do
+    describe 'when there is a referral' do
+      let(:this_user) { User.create(email: :test_email) }
+      let(:referral_email) { 'referral@example.com' }
+      it 'is able to store a referral' do
+        referral = this_user.add_referral(email: referral_email)
+        expect{referral}.to_not be nil
+      end
+      pending it 'counts the number of referrals this user has' do
+        expect(this_user.referrals).to eq 1
       end
     end
   end
