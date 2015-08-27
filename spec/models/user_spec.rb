@@ -65,19 +65,19 @@ RSpec.describe User, type: :model do
     describe 'generating referral codes' do
       it 'is able to create a referral code' do
         this_user.generate_referral_code
-        expect(this_user.referral_code).to_not eq nil
+        expect(this_user.referral_code).to_not be nil
       end
 
       let(:another_email) { 'another@example.com' }
+      let(:another_user) { User.create(email: another_email) }
       it 'generates a unique referral code' do
-        another_user = User.create(email: another_email)
         another_user.generate_referral_code
         this_user.generate_referral_code
         expect(this_user.referral_code).to_not eq(another_user.referral_code)
       end
 
       it 'generates a referral code as soon as an account is created' do
-        expect(this_user.referral_code).to_not eq nil
+        expect(this_user.referral_code).to_not be nil
       end
     end
   end
