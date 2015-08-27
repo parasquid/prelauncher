@@ -1,7 +1,6 @@
 class UsersController < ApplicationController
-  before_filter :check_if_already_registered, only: :new
-
   def new
+    redirect_if_already_registered
     @user = User.new
   end
 
@@ -19,7 +18,7 @@ class UsersController < ApplicationController
 
   private
 
-  def check_if_already_registered
+  def redirect_if_already_registered
     if cookies.signed["user_id"]
       already_registered = User.where(id: cookies.signed["user_id"]).first
       if already_registered
