@@ -9,4 +9,9 @@ class UsersController < ApplicationController
     cookies.permanent.signed[:user_id] = @user.id
     redirect_to referrals_path
   end
+
+  def refer
+    @user = User.find(cookies.signed["user_id"])
+    @referral_code = @user.referral_code
+  end
 end

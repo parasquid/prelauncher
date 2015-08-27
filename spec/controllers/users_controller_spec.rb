@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
   let(:test_email) { 'test@example.com'}
+
   describe "GET new" do
     it "has a 200 status code" do
       get :new
@@ -69,5 +70,15 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe "GET refer-a-friend" do
+    let(:user) { User.create(email: test_email) }
+
+    before do
+      cookies.signed["user_id"] = user.id
+    end
+
+    it "contains the user's referral id" do
+      get :refer
+      expect(assigns[:referral_code]).to include(user.referral_code)
+    end
   end
 end
