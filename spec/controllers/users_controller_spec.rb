@@ -15,15 +15,6 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe "POST create" do
-    let(:user_id) { 1337 }
-    let(:user) { double(User) }
-
-    before do
-      allow(User).to receive(:new).and_return(user)
-      allow(user).to receive(:save).and_return(true)
-      allow(user).to receive(:id).and_return(user_id)
-    end
-
     it "redirects to referral page" do
       post :create, email: test_email
       expect(response).to redirect_to(referrals_path)
@@ -53,19 +44,18 @@ RSpec.describe UsersController, type: :controller do
 
     it "saves the user id in a cookie" do
       post :create, email: test_email
-      expect(cookies.signed["user_id"]).to eq user_id
+      expect(cookies.signed["user_id"]).to eq assigns[:user].id
     end
 
     context "new user" do
-
       it "creates a new account" do
         post :create, email: test_email
-        expect(User).to have_received(:new).with(email: test_email)
+        expect(User.count).to eq 1
       end
 
       it "saves the account" do
         post :create, email: test_email
-        expect(assigns(:user)).to have_received(:save)
+        expect(assigns(:user)).to be_persisted
       end
     end
   end
