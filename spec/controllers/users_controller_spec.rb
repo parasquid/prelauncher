@@ -4,6 +4,8 @@ RSpec.describe UsersController, type: :controller do
   let(:test_email) { 'test@example.com'}
 
   describe "GET new" do
+    let(:user) { User.create(email: test_email) }
+
     it "has a 200 status code" do
       get :new
       expect(response.status).to eq(200)
@@ -12,6 +14,18 @@ RSpec.describe UsersController, type: :controller do
     it "renders the new template" do
       get :new
       expect(response).to render_template("new")
+    end
+
+    it "redirectes to the referrals page if this user is cookied" do
+      cookies.signed["user_id"] = user.id
+      get :new
+      expect(response).to redirect_to(referrals_path)
+    end
+
+    it "deletes the cookie if there is no user found with the cookied id" do
+      cookies.signed["user_id"] = 42
+      get :new
+      expect(cookies.has_key?("user_id")).to be false
     end
   end
 
