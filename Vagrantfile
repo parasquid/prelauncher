@@ -133,7 +133,7 @@ script = <<EOF
 sudo su
 add-apt-repository -y ppa:brightbox/ruby-ng
 apt-get -y update
-apt-get -y install python-software-properties build-essential htop iftop iotop sysstat screen curl git-core rsync libpq-dev wget ruby2.0 ruby2.0-dev redis-server nodejs nginx
+apt-get -y install python-software-properties build-essential htop iftop iotop sysstat screen curl git-core rsync libpq-dev wget ruby2.1 ruby2.1-dev redis-server nodejs nginx
 
 apt-get -y install postgresql postgresql-contrib
 echo 'provisioning postgresql'
