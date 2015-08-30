@@ -12,8 +12,12 @@ class UsersController < ApplicationController
   end
 
   def refer
-    @user = User.find(cookies.signed["user_id"])
-    @referral_code = @user.referral_code
+    @user = User.where(id: cookies.signed["user_id"]).first
+    if !@user.nil?
+      @referral_code = @user.referral_code
+    else
+      redirect_to root_path
+    end
   end
 
   private

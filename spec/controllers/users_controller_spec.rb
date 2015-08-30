@@ -86,13 +86,22 @@ RSpec.describe UsersController, type: :controller do
   describe "GET refer-a-friend" do
     let(:user) { User.create(email: test_email) }
 
-    before do
-      cookies.signed["user_id"] = user.id
+    context "with a signed-in user" do
+      before do
+        cookies.signed["user_id"] = user.id
+      end
+
+      it "contains the user's referral id" do
+        get :refer
+        expect(assigns[:referral_code]).to include(user.referral_code)
+      end
     end
 
-    it "contains the user's referral id" do
-      get :refer
-      expect(assigns[:referral_code]).to include(user.referral_code)
+    context "with a non signed-in user" do
+      it "redirects to the sign-in page" do
+        get :refer
+        expect(response).to redirect_to(root_path)
+      end
     end
   end
 end
