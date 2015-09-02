@@ -21,7 +21,7 @@ class UsersController < ApplicationController
   end
 
   def refer
-    Rails.logger.debug cookies.signed.keys
+    Rails.logger.debug cookies.signed.inspect
     @user = User.where(id: cookies.signed["user_id"]).first
     if !@user.nil?
       @referral_code = @user.referral_code
