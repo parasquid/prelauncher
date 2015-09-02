@@ -8,12 +8,12 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(email: params[:email])
-    @user.save
-
     referring_user = find_referring_user
     if referring_user
-      referring_user.add_referral(@user.email)
+      @user = referring_user.add_referral(params[:email])
+    else
+      @user = User.new(email: params[:email])
+      @user.save
     end
 
     cookies.permanent.signed[:user_id] = @user.id
