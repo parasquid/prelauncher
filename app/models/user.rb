@@ -3,6 +3,8 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email
   validates_uniqueness_of :referral_code
 
+  default_scope { order(created_at: :desc) }
+
   has_many :referrals, :class_name => "User", :foreign_key => "referrer_id"
   belongs_to :referrer, :class_name => "User", :foreign_key => "referrer_id"
 
