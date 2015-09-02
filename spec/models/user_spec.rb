@@ -22,7 +22,7 @@ RSpec.describe User, type: :model do
     end
 
     context 'with an invalid email' do
-      describe 'no domain' do
+      describe 'with no domain' do
         let(:invalid_email) { 'test@' }
         it 'does not create an account' do
           User.create(email: invalid_email)
@@ -30,7 +30,7 @@ RSpec.describe User, type: :model do
         end
       end
 
-      describe 'no @ sign' do
+      describe 'with no @ sign' do
         let(:invalid_email) { 'test.example.com' }
         it 'does not create an account' do
           User.create(email: invalid_email)
@@ -38,7 +38,7 @@ RSpec.describe User, type: :model do
         end
       end
 
-      describe 'no local part' do
+      describe 'with no local part' do
         let(:invalid_email) { '@example.com' }
         it 'does not create an account' do
           User.create(email: invalid_email)
