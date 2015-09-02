@@ -16,7 +16,7 @@ class UsersController < ApplicationController
       @user.save
     end
 
-    cookies.permanent.signed[:user_id] = @user.id
+    cookies.permanent.signed["user_id"] = @user.id
     redirect_to referrals_path
   end
 
@@ -43,7 +43,7 @@ class UsersController < ApplicationController
   end
 
   def find_referring_user
-    ref_code = cookies.signed["ref_code"]
+    ref_code = cookies.permanent.signed["ref_code"]
     User.where(referral_code: ref_code).first
   end
 
