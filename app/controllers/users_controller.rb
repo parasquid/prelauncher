@@ -17,6 +17,7 @@ class UsersController < ApplicationController
     end
 
     cookies.permanent.signed["user_id"] = @user.id
+    Rails.logger.debug cookies.signed["user_id"].inspect
     redirect_to referrals_path
   end
 
