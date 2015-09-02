@@ -8,21 +8,22 @@ class UsersController < ApplicationController
   end
 
   def create
+    email = params[:user][:email]
     referring_user = find_referring_user
+
     if referring_user
-      @user = referring_user.add_referral(params[:email])
+      @user = referring_user.add_referral(email)
     else
-      @user = User.new(email: params[:email])
+      @user = User.new(email: email)
       @user.save
     end
 
+    @user = User.where(email: email).first
     cookies.permanent.signed["user_id"] = @user.id
-    Rails.logger.debug cookies.signed["user_id"].inspect
     redirect_to referrals_path
   end
 
   def refer
-    Rails.logger.debug cookies.signed["user_id"].inspect
     @user = User.where(id: cookies.signed["user_id"]).first
     if !@user.nil?
       @referral_code = @user.referral_code

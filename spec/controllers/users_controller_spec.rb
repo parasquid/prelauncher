@@ -55,36 +55,34 @@ RSpec.describe UsersController, type: :controller do
       end
 
       it "saves the user_id in a signed cookie" do
-        post :create, email: test_email
+        post :create, {user: {email: test_email}}
         expect(biscuits).to have_received(:signed).at_least(:once)
       end
 
       it "saves the user_id in a permanent cookie" do
-        post :create, email: test_email
-        expect(biscuits).to have_received(:permanent)
+        post :create, {user: {email: test_email}}
+        expect(biscuits).to have_received(:permanent).at_least(:once)
       end
 
     end
 
     context "next steps" do
       before do
-        post :create, email: test_email
+        post :create, {user: {email: test_email}}
       end
 
       it "redirects to referral page" do
-        post :create, email: test_email
         expect(response).to redirect_to(referrals_path)
       end
 
       it "saves the user id in a cookie" do
-        post :create, email: test_email
         expect(cookies.signed["user_id"]).to eq assigns[:user].id
       end
     end
 
     context "new user" do
       before do
-        post :create, email: test_email
+        post :create, {user: {email: test_email}}
       end
 
       it "creates a new account" do
@@ -100,7 +98,7 @@ RSpec.describe UsersController, type: :controller do
       let(:referred_email) { 'referred@example.com' }
       before do
         cookies.signed["ref_code"] = user.referral_code
-        post :create, email: referred_email
+        post :create, {user: {email: referred_email}}
       end
 
       it "adds the referred user to the referring user's list of referrals" do
