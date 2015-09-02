@@ -2,11 +2,20 @@ class UsersController < ApplicationController
   def new
     redirect_if_already_registered
     @user = User.new
+
+    ref_code = params[:ref_code]
+    cookies.permanent.signed["ref_code"] = ref_code
   end
 
   def create
     @user = User.new(email: params[:email])
     @user.save
+
+    referring_user = find_referring_user
+    if referring_user
+      referring_user.add_referral(@user.email)
+    end
+
     cookies.permanent.signed[:user_id] = @user.id
     redirect_to referrals_path
   end
@@ -31,6 +40,11 @@ class UsersController < ApplicationController
         cookies.delete("user_id")
       end
     end
+  end
+
+  def find_referring_user
+    ref_code = cookies.signed["ref_code"]
+    User.where(referral_code: ref_code).first
   end
 
 end

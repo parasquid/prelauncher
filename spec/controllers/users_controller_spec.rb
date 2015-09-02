@@ -2,10 +2,9 @@ require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
   let(:test_email) { 'test@example.com'}
+  let(:user) { User.create(email: test_email) }
 
   describe "GET new" do
-    let(:user) { User.create(email: test_email) }
-
     it "has a 200 status code" do
       get :new
       expect(response.status).to eq(200)
@@ -27,6 +26,20 @@ RSpec.describe UsersController, type: :controller do
       get :new
       expect(cookies.has_key?("user_id")).to be false
     end
+
+    context "referred user" do
+      let(:referral_code) { user.referral_code }
+      let(:options) { {ref_code: referral_code} }
+
+      before do
+        get :new, options
+      end
+
+      it 'saves the referral id into a cookie' do
+        expect(cookies.signed["ref_code"]).to eq(referral_code)
+      end
+
+    end
   end
 
   describe "POST create" do
@@ -34,7 +47,8 @@ RSpec.describe UsersController, type: :controller do
       let(:biscuits) { double(cookies) }
 
       before do
-        allow(biscuits).to receive(:"[]=")
+        allow(biscuits).to receive(:"[]").with(any_args)
+        allow(biscuits).to receive(:"[]=").with(any_args)
         allow(biscuits).to receive(:permanent).and_return(biscuits)
         allow(biscuits).to receive(:signed).and_return(biscuits)
         allow(controller).to receive(:cookies).and_return(biscuits)
@@ -42,7 +56,7 @@ RSpec.describe UsersController, type: :controller do
 
       it "saves the user_id in a signed cookie" do
         post :create, email: test_email
-        expect(biscuits).to have_received(:signed)
+        expect(biscuits).to have_received(:signed).at_least(:once)
       end
 
       it "saves the user_id in a permanent cookie" do
@@ -81,11 +95,21 @@ RSpec.describe UsersController, type: :controller do
         expect(assigns(:user)).to be_persisted
       end
     end
+
+    context 'referred user' do
+      let(:referred_email) { 'referred@example.com' }
+      before do
+        cookies.signed["ref_code"] = user.referral_code
+        post :create, email: referred_email
+      end
+
+      it "adds the referred user to the referring user's list of referrals" do
+        expect(user.referrals.count).to eq 1
+      end
+    end
   end
 
   describe "GET refer-a-friend" do
-    let(:user) { User.create(email: test_email) }
-
     context "with a signed-in user" do
       before do
         cookies.signed["user_id"] = user.id

@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   before_create :generate_referral_code
 
   def add_referral(email_address)
-    referrals.create(email: email_address)
+    self.referrals.create(email: email_address)
   end
 
   def generate_referral_code
